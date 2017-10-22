@@ -62,43 +62,46 @@ def getAmountPublicationPerYear(venue, json_file):
                 else:
                     year_publication[j['year']] = 1
 
-    year_publication = sorted(year_publication.items(), key=lambda t: t[0], reverse=True)
+    year_publication = sorted(year_publication.items(), key=lambda t: t[0])
     return year_publication
 
 
-def getPaperName(citations, json_file):
-    for j in json_file:
-        if j['id'] in citations.keys():
-            citations[j['id']][0] = j['title']
-            citations[j['id']].append(j['authors'])
-
-    value_to_remove = ""
-    result = {key: value for key, value in citations.items() if value[0] != value_to_remove}
-
-    return result
-
-
-# Get the tree of citation corresponding to a base paper
-# attributes: paper_name: name of the base paper
-#             tree_level: level of the tree (up to 2 in the assignment)
 def getCitationTreeByPaper(paper_name, tree_level, json_file):
-    collection_paper = []
-    dict_citations = {}
+    # Get paper ID
     for j in json_file:
         if j['title'].upper() == paper_name.upper():
-            citations = j['inCitations']
-            for id_paper in citations:
-                dict_citations[id_paper] = []
-                dict_citations[id_paper].append("")
-            if (tree_level == 1):
-                return getPaperName(dict_citations, json_file)
-            else:
-                paper_names = getPaperName(dict_citations, json_file)
-                rsltt_dict = {}
-                for k in paper_name:
-                    rsltt_dict[paper_name] = getCitationTreeByPaper(paper_name, tree_level - 1, json_file)
-                return rsltt_dict
+            paper_id = j['id']
             break
+
+    nodes = set([paper_id])
+    edges = set()
+
+    for i in range(tree_level):
+        new_nodes = []
+
+        for j in json_file:
+            if j['id'] in nodes:
+                for citation in j['inCitations']:
+                    new_nodes.append(citation)
+                    edges.add((citation, j['id']))
+
+        for n in new_nodes:
+            nodes.add(n)
+
+    # Get paper names
+    named_nodes = []
+    for j in json_file:
+        if j['id'] in nodes:
+            title = list(j['title'])
+            if len(title) > 15:
+                title = title[:15]
+                title[14] = '.'
+                title[13] = '.'
+                title[12] = '.'
+            named_nodes.append((j['id'], "".join(title)))
+
+    return named_nodes, edges
+
 
 def getAuthorID(name, json_file):
     for j in json_file:
@@ -108,7 +111,8 @@ def getAuthorID(name, json_file):
                 return dict["ids"][0]
     return ""
 
-# example of execution: getNumberOfTimeCitedPerYear(2000, 2016,"Yoshua Bengio",json_file)
+
+# Example of execution: getNumberOfTimeCitedPerYear(2000, 2016,"Yoshua Bengio",json_file)
 # attributs: yearMin: year minimum
 #           yeaMax: year maximum
 #           author: author
@@ -131,6 +135,7 @@ def getNumberOfTimeCitedPerYear(yearMin, yearMax, author, json_file):
                         if j['year'] in dict_citation.keys():
                             dict_citation[j['year']] += 1
 
+    dict_citation = sorted(dict_citation.items(), key=lambda t: t[0])
     return dict_citation
 
 
@@ -145,7 +150,7 @@ env = Environment(
 
 @app.route('/')
 def hello_world():
-    return 'CS3219 Assignment 4<br /><br />Question <a href="/1">1</a> <a href="/2">2</a> <a href="/3">3</a> <a href="/4">4</a>'
+    return 'CS3219 Assignment 4<br /><br />Question <a href="/1">1</a> <a href="/2">2</a> <a href="/3">3</a> <a href="/4">4</a> <a href="/5">5</a>'
 
 
 @app.route('/1')
@@ -207,8 +212,24 @@ def question_4():
         j = json.loads(line)
         json_file.append(j)
 
-    data = getCitationTreeByPaper("Low-density parity check codes over GF(q)", 2, json_file)
+    nodes, edges = getCitationTreeByPaper("Low-density parity check codes over GF(q)", 1, json_file)
     template = env.get_template('templates/question4.html')
+    return template.render(nodes=nodes, edges=edges)
+
+
+@app.route('/5')
+def question_5():
+    f = open(CONST_FILE_NAME, 'r', encoding="utf8")
+    lines = f.readlines()
+    f.close()
+
+    json_file = []
+    for line in lines:
+        j = json.loads(line)
+        json_file.append(j)
+
+    data = getNumberOfTimeCitedPerYear(2000, 2016, "Yoshua Bengio", json_file)
+    template = env.get_template('templates/question5.html')
     return template.render(data=data)
 
 
