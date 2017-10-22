@@ -1,5 +1,6 @@
 import json
 from flask import Flask
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 CONST_FILE_NAME = 'Data/data_paper.json'
 
@@ -111,11 +112,15 @@ def getCitationTreeByPaper(paper_name, tree_level, lines):
 # Web Server
 # --------------------------------------------
 app = Flask(__name__)
+env = Environment(
+    loader=FileSystemLoader('./'),
+    autoescape=select_autoescape(['html', 'xml'])
+)
 
 
 @app.route('/')
 def hello_world():
-    return 'CS3219 Assignment 4<br /><br />Question <a href="/1">1</a><a href="/2">2</a><a href="/3">3</a><a href="/4">4</a>'
+    return 'CS3219 Assignment 4<br /><br />Question <a href="/1">1</a> <a href="/2">2</a> <a href="/3">3</a> <a href="/4">4</a>'
 
 
 @app.route('/1')
@@ -124,7 +129,9 @@ def question_1():
     lines = f.readlines()
     f.close()
 
-    return getTopAuthByVenue(10, "arXiv", lines)
+    data = getTopAuthByVenue(10, "arXiv", lines)
+    template = env.get_template('templates/question1.html')
+    return template.render(data=data)
 
 
 @app.route('/2')
@@ -133,7 +140,9 @@ def question_2():
     lines = f.readlines()
     f.close()
 
-    return getPaperMostCited(5, "arXiv", lines)
+    data = getPaperMostCited(5, "arXiv", lines)
+    template = env.get_template('templates/question2.html')
+    return template.render(data=data)
 
 
 @app.route('/3')
@@ -142,7 +151,9 @@ def question_3():
     lines = f.readlines()
     f.close()
 
-    return getAmountPublicationPerYear("ICSE", lines)
+    data = getAmountPublicationPerYear("ICSE", lines)
+    template = env.get_template('templates/question3.html')
+    return template.render(data=data)
 
 
 @app.route('/4')
@@ -151,4 +162,10 @@ def question_4():
     lines = f.readlines()
     f.close()
 
-    return getCitationTreeByPaper("Low-density parity check codes over GF(q)", 2, lines)
+    data = getCitationTreeByPaper("Low-density parity check codes over GF(q)", 2, lines)
+    template = env.get_template('templates/question4.html')
+    return template.render(data=data)
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
