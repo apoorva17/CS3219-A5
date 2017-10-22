@@ -1,14 +1,12 @@
-import argparse
-import xml.etree.ElementTree as etree
 import json
-import time
-from glob import glob
+from flask import Flask
 
 CONST_FILE_NAME = 'Data/data_paper.json'
 
-#get the number of author for paper where the venue is sepcified
-#attributs: nbAuth: number of authors to return
-#           venue: name of the venue
+
+# Get the number of author for paper where the venue is sepcified
+# attributs: nbAuth: number of authors to return
+#            venue: name of the venue
 def getTopAuthByVenue(nbAuth, venue, lines):
     authors = {}
     for line in lines:
@@ -17,7 +15,7 @@ def getTopAuthByVenue(nbAuth, venue, lines):
         if j['venue'].upper() == venue.upper():
             authorList = j['authors']
             for a in authorList:
-                if (len(a['ids'])>0):
+                if (len(a['ids']) > 0):
                     if (a['ids'][0] in authors):
                         authors[a['ids'][0]][0] += 1
                     else:
@@ -25,16 +23,16 @@ def getTopAuthByVenue(nbAuth, venue, lines):
                         authors[a['ids'][0]].append(1)
                         authors[a['ids'][0]].append(a['name'])
 
-    authors = sorted(authors.items(), key=lambda t:t[1], reverse=True)
+    authors = sorted(authors.items(), key=lambda t: t[1], reverse=True)
     listAuthors = []
     for i in range(0, nbAuth):
         listAuthors.append(authors[i])
     return listAuthors
 
 
-#return a collection of paper associated to the number of time it is cited
-#attributs : numPaper: number of papers to return
-#          : venue: name of the conference
+# Return a collection of paper associated to the number of time it is cited
+# attributs : numPaper: number of papers to return
+#           : venue: name of the conference
 def getPaperMostCited(numPaper, venue, lines):
     papers = {}
     for line in lines:
@@ -47,14 +45,15 @@ def getPaperMostCited(numPaper, venue, lines):
             papers[idPaper].append(len(citations))
             papers[idPaper].append(j['title'])
 
-    papers = sorted(papers.items(), key = lambda t:t[1], reverse=True)
+    papers = sorted(papers.items(), key=lambda t: t[1], reverse=True)
     listPapers = []
     for i in range(0, numPaper):
         listPapers.append(papers[i])
     return listPapers
 
-#get the amount of publication per year for a specified venue
-#attributs : venue: name of the conference
+
+# Get the amount of publication per year for a specified venue
+# attributs : venue: name of the conference
 def getAmountPublicationPerYear(venue, lines):
     year_publication = {}
 
@@ -68,7 +67,7 @@ def getAmountPublicationPerYear(venue, lines):
                 else:
                     year_publication[j['year']] = 1
 
-    year_publication = sorted(year_publication.items(), key = lambda t:t[0], reverse = True)
+    year_publication = sorted(year_publication.items(), key=lambda t: t[0], reverse=True)
     return year_publication
 
 
@@ -84,9 +83,10 @@ def getPaperName(citations, lines):
 
     return result
 
-#get the tree of citation corresponding to a base paper
-#attributes: paper_name: name of the base paper
-#            tree_level: level of the tree (up to 2 in the assignment)
+
+# Get the tree of citation corresponding to a base paper
+# attributes: paper_name: name of the base paper
+#             tree_level: level of the tree (up to 2 in the assignment)
 def getCitationTreeByPaper(paper_name, tree_level, lines):
     collection_paper = []
     dict_citations = {}
@@ -103,24 +103,52 @@ def getCitationTreeByPaper(paper_name, tree_level, lines):
                 paper_names = getPaperName(dict_citations, lines)
                 rsltt_dict = {}
                 for k in paper_name:
-                    rsltt_dict[paper_name] = getCitationTreeByPaper(paper_name, tree_level-1, lines)
+                    rsltt_dict[paper_name] = getCitationTreeByPaper(paper_name, tree_level - 1, lines)
                 return rsltt_dict
             break
 
 
-def main():
+# Web Server
+# --------------------------------------------
+app = Flask(__name__)
+
+
+@app.route('/')
+def hello_world():
+    return 'CS3219 Assignment 4<br /><br />Question <a href="/1">1</a><a href="/2">2</a><a href="/3">3</a><a href="/4">4</a>'
+
+
+@app.route('/1')
+def question_1():
     f = open(CONST_FILE_NAME, 'r', encoding="utf8")
     lines = f.readlines()
     f.close()
 
-    #print(getTopAuthByVenue(5, "arXiv", lines))
+    return getTopAuthByVenue(10, "arXiv", lines)
 
-    #print(getPaperMostCited(5, "arXiv", lines))
 
-    #print(getAmountPublicationPerYear("arXiv", lines))
+@app.route('/2')
+def question_2():
+    f = open(CONST_FILE_NAME, 'r', encoding="utf8")
+    lines = f.readlines()
+    f.close()
 
-    #print(getCitationTreeByPaper("Low-density parity check codes over GF(q)", 0, lines))
-    fin = time.clock()
+    return getPaperMostCited(5, "arXiv", lines)
 
-if __name__ == '__main__':
-    main()
+
+@app.route('/3')
+def question_3():
+    f = open(CONST_FILE_NAME, 'r', encoding="utf8")
+    lines = f.readlines()
+    f.close()
+
+    return getAmountPublicationPerYear("ICSE", lines)
+
+
+@app.route('/4')
+def question_4():
+    f = open(CONST_FILE_NAME, 'r', encoding="utf8")
+    lines = f.readlines()
+    f.close()
+
+    return getCitationTreeByPaper("Low-density parity check codes over GF(q)", 2, lines)
