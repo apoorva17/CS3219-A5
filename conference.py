@@ -7,11 +7,9 @@ CONST_FILE_NAME = 'Data/data_paper.json'
 # Get the number of author for paper where the venue is sepcified
 # attributs: nbAuth: number of authors to return
 #            venue: name of the venue
-def getTopAuthByVenue(nbAuth, venue, lines):
+def getTopAuthByVenue(nbAuth, venue, json_file):
     authors = {}
-    for line in lines:
-        j = json.loads(line)
-
+    for j in json_file:
         if j['venue'].upper() == venue.upper():
             authorList = j['authors']
             for a in authorList:
@@ -33,11 +31,9 @@ def getTopAuthByVenue(nbAuth, venue, lines):
 # Return a collection of paper associated to the number of time it is cited
 # attributs : numPaper: number of papers to return
 #           : venue: name of the conference
-def getPaperMostCited(numPaper, venue, lines):
+def getPaperMostCited(numPaper, venue, json_file):
     papers = {}
-    for line in lines:
-        j = json.loads(line)
-
+    for j in json_file:
         if j['venue'].upper() == venue.upper():
             idPaper = j['id']
             citations = j['inCitations']
@@ -54,12 +50,10 @@ def getPaperMostCited(numPaper, venue, lines):
 
 # Get the amount of publication per year for a specified venue
 # attributs : venue: name of the conference
-def getAmountPublicationPerYear(venue, lines):
+def getAmountPublicationPerYear(venue, json_file):
     year_publication = {}
 
-    for line in lines:
-        j = json.loads(line)
-
+    for j in json_file:
         if j['venue'].upper() == venue.upper():
             if j['year'] != "":
                 if (j['year'] in year_publication):
@@ -71,9 +65,8 @@ def getAmountPublicationPerYear(venue, lines):
     return year_publication
 
 
-def getPaperName(citations, lines):
-    for line in lines:
-        j = json.loads(line)
+def getPaperName(citations, json_file):
+    for j in json_file:
         if j['id'] in citations.keys():
             citations[j['id']][0] = j['title']
             citations[j['id']].append(j['authors'])
@@ -87,25 +80,57 @@ def getPaperName(citations, lines):
 # Get the tree of citation corresponding to a base paper
 # attributes: paper_name: name of the base paper
 #             tree_level: level of the tree (up to 2 in the assignment)
-def getCitationTreeByPaper(paper_name, tree_level, lines):
+def getCitationTreeByPaper(paper_name, tree_level, json_file):
     collection_paper = []
     dict_citations = {}
-    for line in lines:
-        j = json.loads(line)
+    for j in json_file:
         if j['title'].upper() == paper_name.upper():
             citations = j['inCitations']
             for id_paper in citations:
                 dict_citations[id_paper] = []
                 dict_citations[id_paper].append("")
-            if (tree_level == 0):
-                return getPaperName(dict_citations, lines)
+            if (tree_level == 1):
+                return getPaperName(dict_citations, json_file)
             else:
-                paper_names = getPaperName(dict_citations, lines)
+                paper_names = getPaperName(dict_citations, json_file)
                 rsltt_dict = {}
                 for k in paper_name:
-                    rsltt_dict[paper_name] = getCitationTreeByPaper(paper_name, tree_level - 1, lines)
+                    rsltt_dict[paper_name] = getCitationTreeByPaper(paper_name, tree_level - 1, json_file)
                 return rsltt_dict
             break
+
+def getAuthorID(name, json_file):
+    for j in json_file:
+        list_dict_auth = j['authors']
+        for dict in list_dict_auth:
+            if dict["name"] == name and dict["ids"] != []:
+                return dict["ids"][0]
+    return ""
+
+# example of execution: getNumberOfTimeCitedPerYear(2000, 2016,"Yoshua Bengio",json_file)
+# attributs: yearMin: year minimum
+#           yeaMax: year maximum
+#           author: author
+#           lines: data
+def getNumberOfTimeCitedPerYear(yearMin, yearMax, author, json_file):
+    dict_citation = {}
+
+    for i in range(yearMin, yearMax + 1):
+        dict_citation[i] = 0
+
+    authorID = getAuthorID(author, json_file)
+    print(authorID)
+    if (authorID != ""):
+        for j in json_file:
+            list_dict_auth = j['authors']
+            for dict in list_dict_auth:
+                list_id = dict["ids"]
+                for id in list_id:
+                    if id == authorID:
+                        if j['year'] in dict_citation.keys():
+                            dict_citation[j['year']] += 1
+
+    return dict_citation
 
 
 # Web Server
@@ -124,7 +149,12 @@ def question_1():
     lines = f.readlines()
     f.close()
 
-    return getTopAuthByVenue(10, "arXiv", lines)
+    json_file = []
+    for line in lines:
+        j = json.loads(line)
+        json_file.append(j)
+
+    return getTopAuthByVenue(10, "arXiv", json_file)
 
 
 @app.route('/2')
@@ -133,7 +163,12 @@ def question_2():
     lines = f.readlines()
     f.close()
 
-    return getPaperMostCited(5, "arXiv", lines)
+    json_file = []
+    for line in lines:
+        j = json.loads(line)
+        json_file.append(j)
+
+    return getPaperMostCited(5, "arXiv", json_file)
 
 
 @app.route('/3')
@@ -142,7 +177,12 @@ def question_3():
     lines = f.readlines()
     f.close()
 
-    return getAmountPublicationPerYear("ICSE", lines)
+    json_file = []
+    for line in lines:
+        j = json.loads(line)
+        json_file.append(j)
+
+    return getAmountPublicationPerYear("ICSE", json_file)
 
 
 @app.route('/4')
@@ -151,4 +191,11 @@ def question_4():
     lines = f.readlines()
     f.close()
 
-    return getCitationTreeByPaper("Low-density parity check codes over GF(q)", 2, lines)
+    json_file = []
+    for line in lines:
+        j = json.loads(line)
+        json_file.append(j)
+
+    return getCitationTreeByPaper("Low-density parity check codes over GF(q)", 2, json_file)
+
+
