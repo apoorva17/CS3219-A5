@@ -21,8 +21,8 @@
         // create an array with nodes
 
         var nodes = new vis.DataSet([
-            {% for id, name, authors, level in nodes %}
-                {id: '{{ id }}', label: '{{ name }}', title: '{{ authors }}', color: '{{ level }}'},
+            {% for id, name, title_complete, authors, color in nodes %}
+                {id: '{{ id }}', label: '{{ name }}', title: '{{ title_complete }}</br>{{ authors }}', color: '{{ color }}'},
             {% endfor %}
         ]);
 

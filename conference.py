@@ -105,6 +105,7 @@ def getCitationTreeByPaper(paper_name, tree_level, json_file):
         if j['id'] in nodes:
             authors = []
             title = list(j['title'])
+            title_complete = list(j['title'])
             for a in j['authors']:
                 if(len(authors) != len(j['authors'])-1):
                     authors.append(a['name']+", ")
@@ -115,7 +116,7 @@ def getCitationTreeByPaper(paper_name, tree_level, json_file):
                 title[14] = '.'
                 title[13] = '.'
                 title[12] = '.'
-            named_nodes.append((j['id'], "".join(title), "".join(authors), colors[node_level[j['id']]]))
+            named_nodes.append((j['id'], "".join(title),"".join(title_complete), ''.join(authors), colors[node_level[j['id']]]))
 
     return named_nodes, edges
 
