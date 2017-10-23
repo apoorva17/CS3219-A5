@@ -67,16 +67,24 @@ def getAmountPublicationPerYear(venue, json_file):
 
 
 def getCitationTreeByPaper(paper_name, tree_level, json_file):
+    colors = {0: '#FF0000', 1: '#00FF00', 2: '#FFFF00'}
+
+
     # Get paper ID
     for j in json_file:
         if j['title'].upper() == paper_name.upper():
             paper_id = j['id']
             break
 
+
     nodes = set([paper_id])
+
+    node_level = {}
+    node_level[paper_id] = 0
     edges = set()
 
     for i in range(tree_level):
+
         new_nodes = []
 
         for j in json_file:
@@ -86,19 +94,28 @@ def getCitationTreeByPaper(paper_name, tree_level, json_file):
                     edges.add((citation, j['id']))
 
         for n in new_nodes:
+            if (n not in node_level.keys()):
+                node_level[n] = i+1
             nodes.add(n)
 
+    print(node_level)
     # Get paper names
     named_nodes = []
     for j in json_file:
         if j['id'] in nodes:
+            authors = []
             title = list(j['title'])
+            for a in j['authors']:
+                if(len(authors) != len(j['authors'])-1):
+                    authors.append(a['name']+", ")
+                else:
+                    authors.append(a['name'])
             if len(title) > 15:
                 title = title[:15]
                 title[14] = '.'
                 title[13] = '.'
                 title[12] = '.'
-            named_nodes.append((j['id'], "".join(title)))
+            named_nodes.append((j['id'], "".join(title), "".join(authors), colors[node_level[j['id']]]))
 
     return named_nodes, edges
 
@@ -212,7 +229,8 @@ def question_4():
         j = json.loads(line)
         json_file.append(j)
 
-    nodes, edges = getCitationTreeByPaper("Low-density parity check codes over GF(q)", 1, json_file)
+    nodes, edges = getCitationTreeByPaper("Low-density parity check codes over GF(q)", 2, json_file)
+    print(nodes)
     template = env.get_template('templates/question4.html')
     return template.render(nodes=nodes, edges=edges)
 
@@ -234,4 +252,4 @@ def question_5():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run()

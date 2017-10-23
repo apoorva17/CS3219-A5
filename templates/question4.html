@@ -19,9 +19,10 @@
 
     <script type="text/javascript">
         // create an array with nodes
+
         var nodes = new vis.DataSet([
-            {% for id, name in nodes %}
-                {id: '{{ id }}', label: '{{ name }}'},
+            {% for id, name, authors, level in nodes %}
+                {id: '{{ id }}', label: '{{ name }}', title: '{{ authors }}', color: '{{ level }}'},
             {% endfor %}
         ]);
 
