@@ -1,8 +1,13 @@
+import os
 import json
 from flask import Flask
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from pymongo import MongoClient
 
-CONST_FILE_NAME = 'Data/data_paper.json'
+CONST_FILE_NAME = 'config/mongo/data.json'
+
+client = MongoClient(os.environ['MONGO_HOST'], port=int(os.environ['MONGO_PORT']))
+db = client.cir
 
 
 # Get the number of author for paper where the venue is sepcified
@@ -253,4 +258,4 @@ def question_5():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', debug=True)

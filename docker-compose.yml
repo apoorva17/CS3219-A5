@@ -1,0 +1,14 @@
+web:
+    build: ./config/python
+    command: python -u app.py
+    ports:
+        - "5000:5000"
+    volumes:
+        - ./:/app
+    links:
+        - db
+
+db:
+    build: ./config/mongo
+    ports:
+        - "27017:27017"
