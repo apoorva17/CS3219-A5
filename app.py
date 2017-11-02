@@ -1,3 +1,8 @@
+"""CS3219 A5 CIR Application.
+
+This file handles all the routing and sets up the Model & Controller.
+"""
+
 from flask import Flask
 from controller import Controller
 from model import Model

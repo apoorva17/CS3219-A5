@@ -2,6 +2,8 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 class Controller(object):
+    """Handles all interaction between Model & View."""
+
     def __init__(self, model):
         self.jinja_env = Environment(
             loader=FileSystemLoader('./'),

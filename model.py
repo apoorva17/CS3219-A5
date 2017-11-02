@@ -5,6 +5,11 @@ from pymongo import MongoClient
 
 
 class Model(object):
+    """Handles all data querying for CIR application.
+
+    NOTE: To use any of the original JSON-based queries, you must first
+    run model.loadJsonFile()
+    """
 
     def __init__(self):
         self.json_path = 'config/mongo/data.json'
@@ -20,10 +25,12 @@ class Model(object):
     #   NoSQL-based Queries
     # -------------------------------------------------------------------------
 
-    # Return a collection of paper associated to the number of time it is cited
-    # attributs : numPaper: number of papers to return
-    #           : venue: name of the conference
     def getPaperMostCited(self, numPaper, venue):
+        """Returns a collection of papers associated with the number of times it is cited.
+
+        numPaper: number of papers to return
+        venue: name of the conference
+        """
         regx = re.compile("^{}$".format(venue), re.IGNORECASE)
         return self.db.papers.aggregate([{
             "$match": {"venue": regx},
@@ -42,10 +49,12 @@ class Model(object):
     #   Original JSON-based Queries
     # -------------------------------------------------------------------------
 
-    # Get the number of author for paper where the venue is sepcified
-    # attributs: nbAuth: number of authors to return
-    #            venue: name of the venue
     def getTopAuthByVenue(self, nbAuth, venue):
+        """Get the number of authors for paper where the venue is specified.
+
+        nbAuth: number of authors to return
+        venue: name of the venue
+        """
         authors = {}
         for j in self.json_file:
             if j['venue'].upper() == venue.upper():
@@ -65,9 +74,11 @@ class Model(object):
             listAuthors.append(authors[i])
         return listAuthors
 
-    # Get the amount of publication per year for a specified venue
-    # attributs : venue: name of the conference
     def getAmountPublicationPerYear(self, venue):
+        """Get the amount of publication per year for a specified venue.
+
+        venue: name of the conference
+        """
         year_publication = {}
 
         for j in self.json_file:
@@ -141,12 +152,16 @@ class Model(object):
                     return dict["ids"][0]
         return ""
 
-    # Example of execution: getNumberOfTimeCitedPerYear(2000, 2016,"Yoshua Bengio",json_file)
-    # attributs: yearMin: year minimum
-    #           yeaMax: year maximum
-    #           author: author
-    #           lines: data
     def getNumberOfTimeCitedPerYear(self, yearMin, yearMax, author):
+        """Get the # times that author was cited between yearMin & yearMax.
+
+        Example of execution: getNumberOfTimeCitedPerYear(2000, 2016,"Yoshua Bengio",json_file)
+
+        yearMin: year minimum
+        yeaMax: year maximum
+        author: author
+        lines: data
+        """
         dict_citation = {}
 
         for i in range(yearMin, yearMax + 1):
