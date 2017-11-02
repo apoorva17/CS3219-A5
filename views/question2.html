@@ -17,7 +17,7 @@
             var data = google.visualization.arrayToDataTable([
                 ["Paper", "Number of Citations"],
                 {% for paper in data %}
-                    ["{{ paper['title'] }}", {{ paper['citations_count'] }}],
+                    ["{{ paper['title'] }}", {{ paper['citationsCount'] }}],
                 {% endfor %}
             ]);
 

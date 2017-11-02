@@ -3,7 +3,7 @@
 This file handles all the routing and sets up the Model & Controller.
 """
 
-from flask import Flask
+from flask import Flask, request
 from controller import Controller
 from model import Model
 
@@ -23,7 +23,11 @@ def index():
 
 @app.route('/a5/trend1')
 def trend1():
-    return controller.trend1("authors", "arXiv", 2000, 2017)
+    subCollectionName = request.args.get('subCollectionName', default="authors", type=str)
+    venue = request.args.get('venue', default="arXiv", type=str)
+    yearMin = request.args.get('yearMin', default=2000, type=int)
+    yearMax = request.args.get('yearMax', default=2017, type=int)
+    return controller.trend1(subCollectionName, venue, yearMin, yearMax)
 
 
 # -------------------------------------------------------------------------
