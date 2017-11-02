@@ -25,6 +25,36 @@ class Model(object):
     #   NoSQL-based Queries
     # -------------------------------------------------------------------------
 
+    def getSubCollectionSizePerYear(self, subCollectionName, venue, yearMin, yearMax):
+        """Returns the number of distinct number of elements named 'subCollectionName' per year.
+
+        subCollectionName: example "authors" or "outCitations"
+        venue: restrict to venue with name (case insensitive)
+        yearMin, yearMax: restrict to year range
+        """
+
+        venueRegx = re.compile("^{}$".format(venue), re.IGNORECASE)
+        return self.db.papers.aggregate([{
+            "$match": {"$and": [
+                {"venue": venueRegx},
+                {"year": {"$gte": yearMin, "$lte": yearMax}},
+            ]},
+        }, {
+            "$unwind": "$" + subCollectionName,
+        }, {
+            "$group": {
+                "_id": {"yearGroup": "$year"},
+                "uniqueItems": {"$addToSet": "$" + subCollectionName},
+            },
+        }, {
+            "$project": {
+                "label": "$_id.yearGroup",
+                "value": {"$size": "$uniqueItems"},
+            }
+        }, {
+            "$sort": {"label": 1},
+        }])
+
     def getPaperMostCited(self, numPaper, venue):
         """Returns a collection of papers associated with the number of times it is cited.
 
@@ -37,10 +67,10 @@ class Model(object):
         }, {
             "$project": {
                 "title": 1,
-                "citations_count": {"$size": {"$ifNull": ["$inCitations", []]}},
-            }
+                "citationsCount": {"$size": "$inCitations"},
+            },
         }, {
-            "$sort": {"citations_count": -1},
+            "$sort": {"citationsCount": -1},
         }, {
             "$limit": numPaper,
         }])

@@ -15,6 +15,30 @@ class Controller(object):
         view = self.jinja_env.get_template('views/index.html')
         return view.render()
 
+    # -------------------------------------------------------------------------
+    #   A5 Questions
+    # -------------------------------------------------------------------------
+
+    def trend1(self, subCollectionName, venue, yearMin, yearMax):
+        data = self.model.getSubCollectionSizePerYear(
+            subCollectionName=subCollectionName,
+            venue=venue,
+            yearMin=yearMin,
+            yearMax=yearMax,
+        )
+        view = self.jinja_env.get_template('views/line_chart.html')
+        return view.render(
+            title="Number of {} per year ({}, {}-{})".format(
+                subCollectionName, venue, yearMin, yearMax),
+            xLabel="Year",
+            yLabel="Number of {}".format(subCollectionName),
+            data=data
+        )
+
+    # -------------------------------------------------------------------------
+    #   A4 Questions
+    # -------------------------------------------------------------------------
+
     def question1(self):
         self.model.loadJsonFile()
         data = self.model.getTopAuthByVenue(10, "arXiv")
