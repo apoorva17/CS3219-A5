@@ -1,14 +1,19 @@
-web:
-    build: ./config/python
+flask_app:
+    build: ./config/flask_app
     command: python -u app.py
     ports:
         - "5000:5000"
     volumes:
         - ./:/app
     links:
-        - db
+        - mongodb
 
-db:
-    build: ./config/mongo
+mongodb:
+    image: mongo:3
     ports:
         - "27017:27017"
+
+mongodb_seeder:
+    build: ./config/mongodb_seeder
+    links:
+        - mongodb

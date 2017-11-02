@@ -16,8 +16,8 @@
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
                 ["Paper", "Number of Citations"],
-                {% for _, author in data %}
-                    ["{{ author[1] }}", {{ author[0] }}],
+                {% for paper in data %}
+                    ["{{ paper['title'] }}", {{ paper['citations_count'] }}],
                 {% endfor %}
             ]);
 

@@ -1,4 +1,5 @@
 import os
+import re
 import json
 from flask import Flask
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -37,21 +38,20 @@ def getTopAuthByVenue(nbAuth, venue, json_file):
 # Return a collection of paper associated to the number of time it is cited
 # attributs : numPaper: number of papers to return
 #           : venue: name of the conference
-def getPaperMostCited(numPaper, venue, json_file):
-    papers = {}
-    for j in json_file:
-        if j['venue'].upper() == venue.upper():
-            idPaper = j['id']
-            citations = j['inCitations']
-            papers[idPaper] = []
-            papers[idPaper].append(len(citations))
-            papers[idPaper].append(j['title'])
-
-    papers = sorted(papers.items(), key=lambda t: t[1], reverse=True)
-    listPapers = []
-    for i in range(0, numPaper):
-        listPapers.append(papers[i])
-    return listPapers
+def getPaperMostCited(numPaper, venue):
+    regx = re.compile("^{}$".format(venue), re.IGNORECASE)
+    return db.papers.aggregate([{
+        "$match": {"venue": regx},
+    }, {
+        "$project": {
+            "title": 1,
+            "citations_count": {"$size": {"$ifNull": ["$inCitations", []]}},
+        }
+    }, {
+        "$sort": {"citations_count": -1},
+    }, {
+        "$limit": numPaper,
+    }])
 
 
 # Get the amount of publication per year for a specified venue
@@ -74,13 +74,11 @@ def getAmountPublicationPerYear(venue, json_file):
 def getCitationTreeByPaper(paper_name, tree_level, json_file):
     colors = {0: '#FF0000', 1: '#00FF00', 2: '#FFFF00'}
 
-
     # Get paper ID
     for j in json_file:
         if j['title'].upper() == paper_name.upper():
             paper_id = j['id']
             break
-
 
     nodes = set([paper_id])
 
@@ -100,7 +98,7 @@ def getCitationTreeByPaper(paper_name, tree_level, json_file):
 
         for n in new_nodes:
             if (n not in node_level.keys()):
-                node_level[n] = i+1
+                node_level[n] = i + 1
             nodes.add(n)
 
     print(node_level)
@@ -112,8 +110,8 @@ def getCitationTreeByPaper(paper_name, tree_level, json_file):
             title = list(j['title'])
             title_complete = list(j['title'])
             for a in j['authors']:
-                if(len(authors) != len(j['authors'])-1):
-                    authors.append(a['name']+", ")
+                if(len(authors) != len(j['authors']) - 1):
+                    authors.append(a['name'] + ", ")
                 else:
                     authors.append(a['name'])
             if len(title) > 15:
@@ -121,7 +119,7 @@ def getCitationTreeByPaper(paper_name, tree_level, json_file):
                 title[14] = '.'
                 title[13] = '.'
                 title[12] = '.'
-            named_nodes.append((j['id'], "".join(title),"".join(title_complete), ''.join(authors), colors[node_level[j['id']]]))
+            named_nodes.append((j['id'], "".join(title), "".join(title_complete), ''.join(authors), colors[node_level[j['id']]]))
 
     return named_nodes, edges
 
@@ -194,16 +192,7 @@ def question_1():
 
 @app.route('/2')
 def question_2():
-    f = open(CONST_FILE_NAME, 'r', encoding="utf8")
-    lines = f.readlines()
-    f.close()
-
-    json_file = []
-    for line in lines:
-        j = json.loads(line)
-        json_file.append(j)
-
-    data = getPaperMostCited(5, "arXiv", json_file)
+    data = getPaperMostCited(5, "arXiv")
     template = env.get_template('templates/question2.html')
     return template.render(data=data)
 
