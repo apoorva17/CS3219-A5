@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 </head>
 <body>
-  <h1> CIR </h1>
+  <h1> Conference Information Retrieval </h1>
   <br />
 
   <!--A4 Questions: <a href="/a4/q1">Q1</a> <a href="/a4/q2">Q2</a> <a href="/a4/q3">Q3</a> <a href="/a4/q4">Q4</a> <a href="/a4/q5">Q5</a>
@@ -18,20 +18,49 @@
   A5 Questions: <a href="/a5/trend1?subCollectionName=authors&venue=arXiv&yearMin=2000&yearMax=2017">Trend 1</a>
 -->
 
-  <form action="/a5/trend1" method = "get">
-    <div class="form-group">
-      <label for="trend1">Trend 1: Transition over time</label>
-      <br/> Number of
-      <input type="text" class="d-inline-block-form-control" placeholder="author" name="subCollectionName">
-      <span> for venue </span>
-      <input type="text" class="d-inline-block-form-control" placeholder="arXiv" name="venue">
-      <span> from Year </span>
-      <input type="number" class="d-inline-block-form-control" placeholder="2000" name="yearMin">
-      <span> to Year </span>
-      <input type="number" class="d-inline-block-form-control" placeholder="2015" name="yearMax">
-      <button type="submit" class="d-inline-block btn btn-primary" value="Submit">Submit</button>
-    </div>
-  </form>
+<form action="/a5/trend1" method = "get">
+  <div class="form-group">
+    <label for="trend1"> <b> Trend 1: Transition over time </b> </label>
+    <br/> Number of
+    <input type="text" class="d-inline-block-form-control" placeholder="authors" name="subCollectionName">
+    <span> for venue </span>
+    <input type="text" class="d-inline-block-form-control" placeholder="arXiv" name="venue">
+    <span> from Year </span>
+    <input type="number" class="d-inline-block-form-control" placeholder="2000" name="yearMin">
+    <span> to Year </span>
+    <input type="number" class="d-inline-block-form-control" placeholder="2015" name="yearMax">
+    <button type="submit" class="d-inline-block btn btn-primary" value="Submit">Submit</button>
+  </div>
+</form>
+
+<form action="/a5/trend2" method = "get">
+  <div class="form-group">
+    <label for="trend1"> <b> Trend 2: Contemporary Comparision </b> </label>
+    <br/> Compare
+    <input type="text" class="d-inline-block-form-control" placeholder="authors" name="subCollectionName">
+    <span> for venue </span>
+    <input type="text" class="d-inline-block-form-control" placeholder="arXiv" name="venue1">
+    <span> and venue </span>
+    <input type="text" class="d-inline-block-form-control" placeholder="ICSE" name="venue2">
+    <span> from Year </span>
+    <input type="number" class="d-inline-block-form-control" placeholder="2000" name="yearMin">
+    <span> to Year </span>
+    <input type="number" class="d-inline-block-form-control" placeholder="2015" name="yearMax">
+    <button type="submit" class="d-inline-block btn btn-primary" value="Submit">Submit</button>
+  </div>
+</form>
+
+<form action="/a5/trend3" method = "get">
+  <div class="form-group">
+    <label for="trend1"> <b> Trend 3: Top N X for Y </b> </label>
+    <br/> Top
+    <input type="number" class="d-inline-block-form-control" placeholder="10">
+    <input type="text" class="d-inline-block-form-control" placeholder="authors" name="subCollectionName">
+    <span> for </span>
+    <input type="text" class="d-inline-block-form-control" placeholder="ICSE" name="venue">
+    <button type="submit" class="d-inline-block btn btn-primary" value="Submit">Submit</button>
+  </div>
+</form>
 
 </body>
 </html>
