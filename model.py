@@ -103,6 +103,29 @@ class Model(object):
         }, {
             "$limit": numPaper,
         }])
+        
+    def getRelationAuthor(self, author, group):
+        """Returns a collection of papers associated with the number of times it is cited.
+
+        numPaper: number of papers to return
+        venue: name of the conference
+        """
+        regx = re.compile("^{}$".format(author), re.IGNORECASE)
+        return self.db.papers.aggregate([{
+            "$match": {"authors": { "$elemMatch": { regx} }},
+        }, {
+            "$unwind": "$authors",
+        }, {
+            "$group": {
+                "_id": {"Group": "$"+group},
+                "uniqueItems": {"$addToSet": "$authors"},
+            },
+        }, {
+            "$project": {
+                "groupName": "$_id.Group",
+                "names": {"$map": {"input":"$uniqueItems", "as": "author", "in": "$author.name" }},
+            }
+        }])
 
     # -------------------------------------------------------------------------
     #   Original JSON-based Queries

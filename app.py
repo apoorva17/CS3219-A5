@@ -35,6 +35,14 @@ def trend2():
 	venues = request.args.get('venues', default="arXiv", type=str).split(",")
 	year = request.args.get('year', default=2000, type=int)
 	return controller.trend2(subCollectionName, venues, year)
+	
+	
+@app.route('/a5/trend4')   
+def trend4():
+	subCollectionName = request.args.get('subCollectionName', default="authors", type=str)
+	author = request.args.get('author', default="arXiv", type=str)
+	group = request.args.get('group', default="arXiv", type=str)
+	return controller.trend4(author,group)
 
 
 # -------------------------------------------------------------------------

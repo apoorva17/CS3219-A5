@@ -47,6 +47,10 @@ class Controller(object):
             data=data
         )
 
+    def trend4(self, author,group):
+        data = self.model.getRelationAuthor(author, group)
+        ##TODO
+        
     # -------------------------------------------------------------------------
     #   A4 Questions
     # -------------------------------------------------------------------------
