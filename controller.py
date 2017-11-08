@@ -34,6 +34,18 @@ class Controller(object):
             yLabel="Number of {}".format(subCollectionName),
             data=data
         )
+        
+    def trend2(self, subCollectionName, venues, year):
+        data = self.model.getSubCollectionSizePerVenues(subCollectionName, venues, year)
+        ##TODO
+        view = self.jinja_env.get_template('views/line_chart.html')
+        return view.render(
+            title="Number of {} for Venues {} in {}".format(
+                subCollectionName, venues, year),
+            xLabel="Venue",
+            yLabel="Number of {}".format(subCollectionName),
+            data=data
+        )
 
     # -------------------------------------------------------------------------
     #   A4 Questions

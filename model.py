@@ -54,6 +54,35 @@ class Model(object):
         }, {
             "$sort": {"label": 1},
         }])
+        
+    def getSubCollectionSizePerVenues(self, subCollectionName, venues, year):
+       """Returns the number of distinct number of elements named 'subCollectionName' per year.
+	   for the different venues in a precise year
+       """
+       venuesRgx=[]
+       for v in venues:
+           venuesRgx.append(re.compile("^{}$".format(v), re.IGNORECASE))
+		   
+       return self.db.papers.aggregate([{
+            "$match": {"$and": [
+                {"venue": {"$in": venuesRgx}},
+                {"year": year},
+            ]},
+        }, {
+            "$unwind": "$" + subCollectionName,
+        }, {
+            "$group": {
+                "_id": {"venueGroup": "$venue"},
+                "uniqueItems": {"$addToSet": "$" + subCollectionName},
+            },
+        }, {
+            "$project": {
+                "label": "$_id.venueGroup",
+                "value": {"$size": "$uniqueItems"},
+            }
+        }, {
+            "$sort": {"label": 1},
+        }])
 
     def getPaperMostCited(self, numPaper, venue):
         """Returns a collection of papers associated with the number of times it is cited.

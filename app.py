@@ -28,6 +28,13 @@ def trend1():
     yearMin = request.args.get('yearMin', default=2000, type=int)
     yearMax = request.args.get('yearMax', default=2017, type=int)
     return controller.trend1(subCollectionName, venue, yearMin, yearMax)
+ 
+@app.route('/a5/trend2')   
+def trend2():
+	subCollectionName = request.args.get('subCollectionName', default="authors", type=str)
+	venues = request.args.get('venues', default="arXiv", type=str).split(",")
+	year = request.args.get('year', default=2000, type=int)
+	return controller.trend2(subCollectionName, venues, year)
 
 
 # -------------------------------------------------------------------------
