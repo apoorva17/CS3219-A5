@@ -32,7 +32,7 @@ def trend1():
 @app.route('/a5/trend2')   
 def trend2():
 	subCollectionName = request.args.get('subCollectionName', default="authors", type=str)
-	venues = request.args.get('venues', default="arXiv", type=str).split(",")
+	venues = request.args.get('venues', default="arXiv,Journal of abnormal child psychology", type=str).split(",")
 	year = request.args.get('year', default=2000, type=int)
 	return controller.trend2(subCollectionName, venues, year)
 	

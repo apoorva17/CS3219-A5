@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ title }}</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+        #line_chart {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ["{{ xLabel }}", "{{ yLabel }}"],
+                {% for item in data %}
+                    ["{{ item['label'] }}", {{ item['value'] }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                title: "{{ title }}",
+                width: 1000,
+                height: 600,
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById("column_chart"));
+            chart.draw(data, options);
+          }
+    </script>
+    <div id="column_chart" style="width: 1000px; height: 600px;"></div>
+</body>
+</html>
