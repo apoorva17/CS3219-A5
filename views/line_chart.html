@@ -1,15 +1,9 @@
-<html>
-<head>
-    <title>{{ title }}</title>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <style>
-        #line_chart {
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
-</head>
-<body>
+{%  import 'views/common_functions/common_function.html' as commonFunctions %}
+{% import 'views/common_functions/form_common.html' as commonForm %}
+{{ commonFunctions.getHTMLHeader(title, "UTF-8", ['/static/bootstrap/css/bootstrap.css', '/static/design.css'], ["https://www.gstatic.com/charts/loader.js"]) }}
+<body class="body-bg">
+    {{ commonFunctions.getToolBar() }}
+
     <script type="text/javascript">
         google.charts.load("current", {packages:["corechart"]});
         google.charts.setOnLoadCallback(drawChart);
@@ -30,6 +24,11 @@
             chart.draw(data, options);
           }
     </script>
-    <div id="line_chart" style="width: 1000px; height: 600px;"></div>
+    <div id="line_chart" class="container"></div>
+    <div class="container">
+        {{ commonForm[form_function]() }}
+    </div>
+    {{ commonFunctions.getFooter() }}
+    {{ commonFunctions.loadJavaScriptFiles() }}
 </body>
-</html>
+{{ commonFunctions.getEndFileHTML() }}

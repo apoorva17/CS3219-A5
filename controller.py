@@ -33,6 +33,7 @@ class Controller(object):
             xLabel="Year",
             yLabel="Number of {}".format(subCollectionName),
             data=data,
+            form_function="getFormTrend1"
         )
 
     def trend2(self, subCollectionName, venues, year):
@@ -43,7 +44,8 @@ class Controller(object):
                 subCollectionName, venues, year),
             xLabel="Venue",
             yLabel="Number of {}".format(subCollectionName),
-            data=data
+            data=data,
+            form_function="getFormTrend2"
         )
 
     def trend3(self, n, elementType, filterKeys, filterValues):
@@ -54,13 +56,14 @@ class Controller(object):
                 n, elementType, " / ".join(filterKeys), " / ".join(filterValues)),
             xLabel=elementType,
             yLabel="Number of Occurences",
-            data=data
+            data=data,
+            form_function="getFormTrend3"
         )
 
     def trend4(self, author, group):
        nodes,edges =  self.model.getRelationAuthor(author, group)
        view = self.jinja_env.get_template('views/graph.html')
-       return view.render(nodes=nodes, edges=edges)
+       return view.render(nodes=nodes, edges=edges, form_function="getFormTrend4")
     # -------------------------------------------------------------------------
     #   A4 Questions
     # -------------------------------------------------------------------------

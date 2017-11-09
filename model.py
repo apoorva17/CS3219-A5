@@ -12,9 +12,7 @@ class Model(object):
     """
 
     def __init__(self):
-        os.chdir('D:/Desktop/NUS_Semestre_1/CS3219_Software_development/Assignments/Assignment_5/CS3219-A5_bis/')
-        self.json_path = 'config/mongodb_seeder/data.json'
-        #self.json_path = 'config/mongo/data.json'
+        self.json_path = 'config/mongo/data.json'
         self.client = MongoClient(os.environ['MONGO_HOST'], port=int(os.environ['MONGO_PORT']))
         self.db = self.client.cir
 

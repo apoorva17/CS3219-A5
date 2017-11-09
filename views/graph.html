@@ -1,21 +1,11 @@
-<html>
-<head>
-    <title>Trend 4</title>
-    <script type="text/javascript" src="/static/vis.min.js"></script>
-    <link href="/static/vis.min.css" rel="stylesheet" type="text/css" />
-    <style>
-        #network {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        h1 {
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <h1>Relation of an author</h1>
-    <div id="network" class="container"></div>
+{%  import 'views/common_functions/common_function.html' as commonFunctions %}
+{% import 'views/common_functions/form_common.html' as commonForm %}
+{{ commonFunctions.getHTMLHeader(title, "UTF-8", ['/static/bootstrap/css/bootstrap.css', '/static/design.css', "/static/vis.min.css"], ["https://www.gstatic.com/charts/loader.js", "/static/vis.min.js"]) }}
+<body class="body-bg">
+    {{ commonFunctions.getToolBar() }}
+
+    <h1 class="text-center">Relation of an author</h1>
+    <div id="network" class="container" style="height: 800px"></div>
 
     <script type="text/javascript">
         // create an array with nodes
@@ -46,5 +36,12 @@
         // initialize your network!
         var network = new vis.Network(container, data, options);
     </script>
+    <div class="container">
+        {{ commonForm[form_function]() }}
+    </div>
+    {{ commonFunctions.getFooter() }}
+    {{ commonFunctions.loadJavaScriptFiles() }}
+</body>
+{{ commonFunctions.getEndFileHTML() }}
 </body>
 </html>
