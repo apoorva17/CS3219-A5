@@ -58,10 +58,9 @@ class Controller(object):
         )
 
     def trend4(self, author, group):
-        # data = self.model.getRelationAuthor(author, group)
-        # TODO
-        pass
-
+       nodes,edges =  self.model.getRelationAuthor(author, group)
+       view = self.jinja_env.get_template('views/graph.html')
+       return view.render(nodes=nodes, edges=edges)
     # -------------------------------------------------------------------------
     #   A4 Questions
     # -------------------------------------------------------------------------

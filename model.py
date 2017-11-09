@@ -108,21 +108,33 @@ class Model(object):
         venue: name of the conference
         """
         regx = re.compile("^{}$".format(author), re.IGNORECASE)
-        return self.db.papers.aggregate([{
-            "$match": {"authors": {"$elemMatch": {regx}}},
+        cursor= self.db.papers.aggregate([{
+            "$match": {"authors": {"$elemMatch": {"name":author}}},
         }, {
             "$unwind": "$authors",
         }, {
             "$group": {
                 "_id": {"Group": "$" + group},
-                "uniqueItems": {"$addToSet": "$authors"},
+                "uniqueItems": {"$addToSet": "$authors.name"},
             },
-        }, {
-            "$project": {
-                "groupName": "$_id.Group",
-                "names": {"$map": {"input": "$uniqueItems", "as": "author", "in": "$author.name"}},
-            }
         }])
+        
+        nodes = []
+        edges = []
+        n = 1;
+        nodes.append((0,author,"#0000FF"))
+        for j in cursor:
+            nodes.append((n,j['_id']['Group'],"#FF0000"))
+            edges.append((0,n))
+            g=n
+            n+=1
+            for name in j['uniqueItems']:
+                if author not in name:
+                    nodes.append((n,name,'#00FF00'))
+                    edges.append((g,n))
+                    n+=1
+        return nodes,edges
+        
 
     def getTopNElements(self, n, elementType, filterKeys, filterValues):
         """Returns the top N items of type 'elementType' subject to the filters provided.

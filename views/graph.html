@@ -1,0 +1,50 @@
+<html>
+<head>
+    <title>Trend 4</title>
+    <script type="text/javascript" src="/static/vis.min.js"></script>
+    <link href="/static/vis.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        #network {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Relation of an author</h1>
+    <div id="network" style="width: 1000px; height: 600px;"></div>
+
+    <script type="text/javascript">
+        // create an array with nodes
+
+        var nodes = new vis.DataSet([
+            {% for id, name,color in nodes %}
+                {id: '{{ id }}', label: '{{ name }}',color: '{{ color }}'},
+            {% endfor %}
+        ]);
+
+        // create an array with edges
+        var edges = new vis.DataSet([
+            {% for from, to in edges %}
+                {from: '{{ from }}', to: '{{ to }}'},
+            {% endfor %}
+        ]);
+
+        // create a network
+        var container = document.getElementById('network');
+
+        // provide the data in the vis format
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+        var options = {};
+
+        // initialize your network!
+        var network = new vis.Network(container, data, options);
+    </script>
+</body>
+</html>
