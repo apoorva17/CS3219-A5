@@ -34,10 +34,10 @@ class Controller(object):
             yLabel="Number of {}".format(subCollectionName),
             data=data
         )
-        
+
     def trend2(self, subCollectionName, venues, year):
         data = self.model.getSubCollectionSizePerVenues(subCollectionName, venues, year)
-        ##TODO
+        # TODO
         view = self.jinja_env.get_template('views/column_chart.html')
         return view.render(
             title="Number of {} for Venues {} in {}".format(
@@ -47,10 +47,11 @@ class Controller(object):
             data=data
         )
 
-    def trend4(self, author,group):
-        data = self.model.getRelationAuthor(author, group)
-        ##TODO
-        
+    def trend4(self, author, group):
+        # data = self.model.getRelationAuthor(author, group)
+        # TODO
+        pass
+
     # -------------------------------------------------------------------------
     #   A4 Questions
     # -------------------------------------------------------------------------

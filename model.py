@@ -54,16 +54,16 @@ class Model(object):
         }, {
             "$sort": {"label": 1},
         }])
-        
+
     def getSubCollectionSizePerVenues(self, subCollectionName, venues, year):
-       """Returns the number of distinct number of elements named 'subCollectionName' per year.
-	   for the different venues in a precise year
-       """
-       venuesRgx=[]
-       for v in venues:
-           venuesRgx.append(re.compile("^{}$".format(v), re.IGNORECASE))
-		   
-       return self.db.papers.aggregate([{
+        """Returns the number of distinct number of elements named 'subCollectionName' per year.
+        for the different venues in a precise year
+        """
+        venuesRgx = []
+        for v in venues:
+            venuesRgx.append(re.compile("^{}$".format(v), re.IGNORECASE))
+
+        return self.db.papers.aggregate([{
             "$match": {"$and": [
                 {"venue": {"$in": venuesRgx}},
                 {"year": year},
@@ -103,7 +103,7 @@ class Model(object):
         }, {
             "$limit": numPaper,
         }])
-        
+
     def getRelationAuthor(self, author, group):
         """Returns a collection of papers associated with the number of times it is cited.
 
@@ -112,18 +112,18 @@ class Model(object):
         """
         regx = re.compile("^{}$".format(author), re.IGNORECASE)
         return self.db.papers.aggregate([{
-            "$match": {"authors": { "$elemMatch": { regx} }},
+            "$match": {"authors": {"$elemMatch": {regx}}},
         }, {
             "$unwind": "$authors",
         }, {
             "$group": {
-                "_id": {"Group": "$"+group},
+                "_id": {"Group": "$" + group},
                 "uniqueItems": {"$addToSet": "$authors"},
             },
         }, {
             "$project": {
                 "groupName": "$_id.Group",
-                "names": {"$map": {"input":"$uniqueItems", "as": "author", "in": "$author.name" }},
+                "names": {"$map": {"input": "$uniqueItems", "as": "author", "in": "$author.name"}},
             }
         }])
 
