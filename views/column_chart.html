@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>{{ title }}</title>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <style>
-        #line_chart {
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
-</head>
-<body>
+{%  import 'views/common_functions/common_function.html' as commonFunctions %}
+{{ commonFunctions.getHTMLHeader(title, "UTF-8", [css_bootstrap, css_sheet], ["https://www.gstatic.com/charts/loader.js"]) }}
+<body class="body-bg">
+    {{ commonFunctions.getToolBar() }}
     <script type="text/javascript">
         google.charts.load("current", {packages:["corechart"]});
         google.charts.setOnLoadCallback(drawChart);
@@ -32,5 +23,7 @@
           }
     </script>
     <div id="column_chart" style="width: 1000px; height: 600px;"></div>
+    {{ commonFunctions.getFooter() }}
+    {{ commonFunctions.loadJavaScriptFiles() }}
 </body>
-</html>
+{{ commonFunctions.getEndFileHTML() }}

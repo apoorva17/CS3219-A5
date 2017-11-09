@@ -1,5 +1,5 @@
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-
+from flask import url_for
 
 class Controller(object):
     """Handles all interaction between Model & View."""
@@ -44,6 +44,8 @@ class Controller(object):
             xLabel="Venue",
             yLabel="Number of {}".format(subCollectionName),
             data=data,
+            css_sheet=url_for('static', filename='design.css'),
+            css_bootstrap=url_for('static', filename="bootstrap/css/bootstrap.css")
         )
 
     def trend3(self, n, elementType, filterKeys, filterValues):
@@ -55,6 +57,8 @@ class Controller(object):
             xLabel=elementType,
             yLabel="Number of Occurences",
             data=data,
+            css_sheet=url_for('static', filename='design.css'),
+            css_bootstrap=url_for('static', filename="bootstrap/css/bootstrap.css")
         )
 
     def trend4(self, author, group):

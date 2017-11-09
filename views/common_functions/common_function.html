@@ -1,0 +1,81 @@
+{%  macro getHTMLHeader(title, charset, css_sheets, scripts) %}
+    <!doctype html>
+	<html lang="en">
+	    <head>
+	        <meta charset="{{ charset }}"/>
+            {% for css_sheet in css_sheets %}
+                <link rel="stylesheet" href="{{ css_sheet }}"/>
+            {% endfor %}
+            {%  for  script in scripts%}
+                <script type="text/javascript" src="{{ script }}"></script>
+            {% endfor %}
+	        <title>{{ title }}</title>
+	    </head>
+{%-  endmacro %}
+
+{%  macro getEndFileHTML() %}
+
+    </html>
+{%-  endmacro %}
+
+{% macro getToolBar() %}
+     <div>
+        <nav class="navbar-fixed-top navbar-inverse" role="navigation">
+            <div class="collapse navbar-collapse navbar-exinverse-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="/">
+                            <i class="glyphicon glyphicon-home"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li class="divider-vertical"></li>
+                    <li class="dropdown">
+                        <a data-target="#" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/a5/trend1">Trend 1</a>
+                            </li>
+                           <li>
+                                <a href="/a5/trend2">Trend 2</a>
+                            </li>
+                            <li>
+                                <a href="/a5/trend3">Trend 3</a>
+                            </li>
+                            <li>
+                                <a href="/a5/trend4">Trend 4</a>
+                            </li>
+                            <li>
+                                <a href="/a5/trend5">Trend 5</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+{%-  endmacro %}
+
+
+{%  macro getFooter() %}
+    <footer class="margin-top-20">
+        <nav class="navbar-fixed-bottom navbar-inverse">
+            <div class="row text-center text-muted">
+                <p>Realised by Apoorva Ullas, Loïc Vandenberghe, Mart van Buren, Valentin Gilbert. Using <a class="liens-footer" href="http://getbootstrap.com/">Bootstrap</a> and  <a class="liens-footer" href="https://developers.google.com/chart/">googleCharts</a>.
+                </p>
+            </div>
+            <div class="row text-center text-muted">
+                <p>© 2017 A. Ullas, L. Vandenberghen, M. Van Buren, V. Gilbert All rights reserved 2017.</p>
+            </div>
+         </nav>
+    </footer>
+{%-  endmacro %}
+
+{%  macro loadJavaScriptFiles() %}
+    <script type="text/javascript" src="/static/JQuery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+{%-  endmacro %}
+
