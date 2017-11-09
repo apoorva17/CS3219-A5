@@ -49,7 +49,7 @@ def trend3():
 
 @app.route('/a5/trend4')
 def trend4():
-    author = request.args.get('author', default="arXiv", type=str)
+    author = request.args.get('author', default="Lin Li", type=str)
     group = request.args.get('group', default="arXiv", type=str)
     return controller.trend4(author, group)
 

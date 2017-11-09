@@ -43,9 +43,7 @@ class Controller(object):
                 subCollectionName, venues, year),
             xLabel="Venue",
             yLabel="Number of {}".format(subCollectionName),
-            data=data,
-            css_sheet=url_for('static', filename='design.css'),
-            css_bootstrap=url_for('static', filename="bootstrap/css/bootstrap.css")
+            data=data
         )
 
     def trend3(self, n, elementType, filterKeys, filterValues):
@@ -56,9 +54,7 @@ class Controller(object):
                 n, elementType, " / ".join(filterKeys), " / ".join(filterValues)),
             xLabel=elementType,
             yLabel="Number of Occurences",
-            data=data,
-            css_sheet=url_for('static', filename='design.css'),
-            css_bootstrap=url_for('static', filename="bootstrap/css/bootstrap.css")
+            data=data
         )
 
     def trend4(self, author, group):

@@ -1,5 +1,5 @@
 {%  import 'views/common_functions/common_function.html' as commonFunctions %}
-{{ commonFunctions.getHTMLHeader(title, "UTF-8", [css_bootstrap, css_sheet], ["https://www.gstatic.com/charts/loader.js"]) }}
+{{ commonFunctions.getHTMLHeader(title, "UTF-8", ['/static/bootstrap/css/bootstrap.css', '/static/design.css'], ["https://www.gstatic.com/charts/loader.js"]) }}
 <body class="body-bg">
     {{ commonFunctions.getToolBar() }}
     <script type="text/javascript">
@@ -22,7 +22,7 @@
             chart.draw(data, options);
           }
     </script>
-    <div id="column_chart" style="width: 1000px; height: 600px;"></div>
+    <div id="column_chart" class="container"></div>
     {{ commonFunctions.getFooter() }}
     {{ commonFunctions.loadJavaScriptFiles() }}
 </body>
