@@ -56,13 +56,10 @@ class Model(object):
         }])
 
     def getSubCollectionSizePerVenues(self, subCollectionName, venues, year):
-        """Returns the number of distinct number of elements named 'subCollectionName' per year.
-        for the different venues in a precise year
+        """Returns the number of distinct number of elements named 'subCollectionName' per
+        venue for a precise year.
         """
-        venuesRgx = []
-        for v in venues:
-            venuesRgx.append(re.compile("^{}$".format(v), re.IGNORECASE))
-
+        venuesRgx = [re.compile("^{}$".format(v), re.IGNORECASE) for v in venues]
         return self.db.papers.aggregate([{
             "$match": {"$and": [
                 {"venue": {"$in": venuesRgx}},
@@ -126,6 +123,82 @@ class Model(object):
                 "names": {"$map": {"input": "$uniqueItems", "as": "author", "in": "$author.name"}},
             }
         }])
+
+    def getTopNElements(self, n, elementType, filterKeys, filterValues):
+        """Returns the top N items of type 'elementType' subject to the filters provided.
+
+        n:            number of items to return
+        elementType:  if 'inCitations' or 'outCitations', result will be document name
+                      if 'authors', result will be author name
+        filterKeys:   if 'authors', filter will be based on author name
+                      otherwise, filterKey should directly be the name of a key
+        filterValues: values for the filterKeys
+        """
+        aggregation_pipeline = []
+
+        # First expand sub-collections we want to filter or search.
+        if elementType == "authors" or "author" in filterKeys:
+            aggregation_pipeline.append({
+                "$unwind": "$authors",
+            })
+        if elementType == "inCitations":
+            aggregation_pipeline.append({
+                "$unwind": "$inCitations",
+            })
+        if elementType == "outCitations":
+            aggregation_pipeline.append({
+                "$unwind": "$outCitations",
+            })
+
+        # Add all filters as case-insensitive regex.
+        for key, value in zip(filterKeys, filterValues):
+            if key == "author":
+                key = "authors.name"
+            aggregation_pipeline.append({
+                "$match": {key: re.compile("^{}$".format(value), re.IGNORECASE)},
+            })
+
+        # Find top items of elementType.
+        aggregation_pipeline.extend([{
+            "$group": {
+                "_id": {"elementTypeGroup": "$" + elementType},
+                "numOccurences": {"$sum": 1},
+            },
+        }, {
+            "$sort": {"numOccurences": -1},
+        }, {
+            "$limit": n,
+        }, {
+            "$project": {
+                "label": "$_id.elementTypeGroup",
+                "value": "$numOccurences",
+            }
+        }])
+
+        # Find more friendly names for the labels.
+        if elementType == "authors":
+            aggregation_pipeline.append({
+                "$project": {
+                    "label": "$label.name",
+                    "value": 1,
+                },
+            })
+        if elementType in ["inCitations", "outCitations"]:
+            aggregation_pipeline.extend([{
+                "$lookup": {
+                    "from": "papers",
+                    "localField": "label",
+                    "foreignField": "id",
+                    "as": "document",
+                },
+            }, {
+                "$project": {
+                    "label": {"$ifNull": ["$document[0].title", "$label"]},
+                    "value": 1,
+                }
+            }])
+
+        return self.db.papers.aggregate(aggregation_pipeline)
 
     # -------------------------------------------------------------------------
     #   Original JSON-based Queries

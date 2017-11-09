@@ -50,10 +50,11 @@
   <div class="form-group">
     <label for="trend1"> <b> Trend 3: Top N X for Y </b> </label>
     <br/> Top
-    <input type="number" class="d-inline-block-form-control" placeholder="10">
-    <input type="text" class="d-inline-block-form-control" placeholder="authors" name="subCollectionName">
+    <input name="n" type="number" class="d-inline-block-form-control" placeholder="10">
+    <input name="elementType" type="text" class="d-inline-block-form-control" placeholder="authors">
     <span> for </span>
-    <input type="text" class="d-inline-block-form-control" placeholder="ICSE" name="venue">
+    <input name="filterKeys" type="text" class="d-inline-block-form-control" placeholder="venue">
+    <input name="filterValues" type="text" class="d-inline-block-form-control" placeholder="ICSE">
     <button type="submit" class="d-inline-block btn btn-primary" value="Submit">Submit</button>
   </div>
 </form>

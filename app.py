@@ -38,6 +38,15 @@ def trend2():
     return controller.trend2(subCollectionName, venues, year)
 
 
+@app.route('/a5/trend3')
+def trend3():
+    n = request.args.get('n', default=10, type=int)
+    elementType = request.args.get('elementType', default="authors", type=str)
+    filterKeys = request.args.get('filterKeys', default="venue", type=str).split(",")
+    filterValues = request.args.get('filterValues', default="ICSE", type=str).split(",")
+    return controller.trend3(n, elementType, filterKeys, filterValues)
+
+
 @app.route('/a5/trend4')
 def trend4():
     author = request.args.get('author', default="arXiv", type=str)

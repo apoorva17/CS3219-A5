@@ -32,19 +32,29 @@ class Controller(object):
                 subCollectionName, venue, yearMin, yearMax),
             xLabel="Year",
             yLabel="Number of {}".format(subCollectionName),
-            data=data
+            data=data,
         )
 
     def trend2(self, subCollectionName, venues, year):
         data = self.model.getSubCollectionSizePerVenues(subCollectionName, venues, year)
-        # TODO
         view = self.jinja_env.get_template('views/column_chart.html')
         return view.render(
-            title="Number of {} for Venues {} in {}".format(
+            title="Number of {} for venues {} in {}".format(
                 subCollectionName, venues, year),
             xLabel="Venue",
             yLabel="Number of {}".format(subCollectionName),
-            data=data
+            data=data,
+        )
+
+    def trend3(self, n, elementType, filterKeys, filterValues):
+        data = self.model.getTopNElements(n, elementType, filterKeys, filterValues)
+        view = self.jinja_env.get_template('views/column_chart.html')
+        return view.render(
+            title="Top {} {} for {} '{}'".format(
+                n, elementType, " / ".join(filterKeys), " / ".join(filterValues)),
+            xLabel=elementType,
+            yLabel="Number of Occurences",
+            data=data,
         )
 
     def trend4(self, author, group):
