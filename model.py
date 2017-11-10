@@ -102,14 +102,8 @@ class Model(object):
         }])
 
     def getRelationAuthor(self, author, group):
-        """Returns a collection of papers associated with the number of times it is cited.
-
-        numPaper: number of papers to return
-        venue: name of the conference
-        """
-        regx = re.compile("^{}$".format(author), re.IGNORECASE)
-        cursor= self.db.papers.aggregate([{
-            "$match": {"authors": {"$elemMatch": {"name":author}}},
+        cursor = self.db.papers.aggregate([{
+            "$match": {"authors": {"$elemMatch": {"name": author}}},
         }, {
             "$unwind": "$authors",
         }, {
@@ -118,23 +112,68 @@ class Model(object):
                 "uniqueItems": {"$addToSet": "$authors.name"},
             },
         }])
-        
+
         nodes = []
         edges = []
-        n = 1;
-        nodes.append((0,author,"#0000FF"))
+        n = 1
+        nodes.append((0, author, "", "#0000FF"))
         for j in cursor:
-            nodes.append((n,j['_id']['Group'],"#FF0000"))
-            edges.append((0,n))
-            g=n
-            n+=1
+            nodes.append((n, j['_id']['Group'], "", "#FF0000"))
+            edges.append((0, n))
+            g = n
+            n += 1
             for name in j['uniqueItems']:
                 if author not in name:
-                    nodes.append((n,name,'#00FF00'))
-                    edges.append((g,n))
-                    n+=1
-        return nodes,edges
-        
+                    nodes.append((n, name, "", '#00FF00'))
+                    edges.append((g, n))
+                    n += 1
+        return nodes, edges
+
+    def getCitationGraph(self, title, max_depth):
+        colors = {0: '#FF0000', 1: '#00FF00', 2: '#FFFF00'}
+
+        # Get root paper ID
+        root_paper = self.db.papers.find_one({"title": title})
+        root_id = root_paper['id']
+
+        nodes = set([root_id])
+        edges = set()
+        node_level = {root_id: 0}
+
+        for i in range(max_depth):
+            new_nodes = []
+
+            for j in self.db.papers.find():
+                if j['id'] in nodes:
+                    for citation in j['inCitations']:
+                        new_nodes.append(citation)
+                        edges.add((citation, j['id']))
+
+            for n in new_nodes:
+                if n not in node_level.keys():
+                    node_level[n] = i + 1
+                nodes.add(n)
+
+        # Get paper names
+        named_nodes = []
+        for j in self.db.papers.find():
+            if j['id'] in nodes:
+                authors = []
+                title = list(j['title'])
+                title_complete = list(j['title'])
+                for a in j['authors']:
+                    if(len(authors) != len(j['authors']) - 1):
+                        authors.append(a['name'] + ", ")
+                    else:
+                        authors.append(a['name'])
+                if len(title) > 15:
+                    title = title[:15]
+                    title[14] = '.'
+                    title[13] = '.'
+                    title[12] = '.'
+                named_nodes.append((j['id'], "".join(title), "".join(title_complete) + "<br />" + "".join(authors), colors[node_level[j['id']]]))
+
+        return named_nodes, edges
 
     def getTopNElements(self, n, elementType, filterKeys, filterValues):
         """Returns the top N items of type 'elementType' subject to the filters provided.

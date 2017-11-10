@@ -61,9 +61,15 @@ class Controller(object):
         )
 
     def trend4(self, author, group):
-       nodes,edges =  self.model.getRelationAuthor(author, group)
-       view = self.jinja_env.get_template('views/graph.html')
-       return view.render(nodes=nodes, edges=edges, form_function="getFormTrend4")
+        nodes, edges = self.model.getRelationAuthor(author, group)
+        view = self.jinja_env.get_template('views/graph.html')
+        return view.render(nodes=nodes, edges=edges, form_function="getFormTrend4")
+
+    def trend5(self, title, maxDepth):
+        nodes, edges = self.model.getCitationGraph(title, maxDepth)
+        view = self.jinja_env.get_template('views/graph.html')
+        return view.render(nodes=nodes, edges=edges, form_function="getFormTrend5")
+
     # -------------------------------------------------------------------------
     #   A4 Questions
     # -------------------------------------------------------------------------
