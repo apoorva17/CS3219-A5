@@ -42,11 +42,11 @@
     {{ commonFunctions.loadJavaScriptFiles() }}
     <script>
         $( document ).ready(function() {
-            //$('#div-Trend1').hide();
-            //$('div').filter(function() {
-            //      return this.id.match(/Trend.*/);
-            //}).hide();
-            $('a.btn-trend').addClass("active");
+            $('#div-Trend1').hide();
+            $('div').filter(function() {
+                  return this.id.match(/Trend.*/);
+            }).hide();
+            //$('a.btn-trend').addClass("active");
         });
 
         $(function() {
