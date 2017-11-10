@@ -1,0 +1,36 @@
+{%  import 'views/common_functions/common_function.html' as commonFunctions %}
+{% import 'views/common_functions/form_common.html' as commonForm %}
+{{ commonFunctions.getHTMLHeader(title, "UTF-8", ['/static/bootstrap/css/bootstrap.css', '/static/design.css'], ["https://www.gstatic.com/charts/loader.js"]) }}
+<body class="body-bg">
+    {{ commonFunctions.getToolBar() }}
+
+
+    <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ["{{ xLabel }}", "{{ yLabel }}"],
+                {% for item in data %}
+                    ["{{ item['label'] }}", {{ item['value'] }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                title: "{{ title | safe }}",
+                width: 1000,
+                height: 600,
+                pieHole: 0.4
+            };
+            var chart = new google.visualization.PieChart(document.getElementById("donutchart"));
+            chart.draw(data, options);
+          }
+    </script>
+    <div id="donutchart" class="container"></div>
+    <div class="container">
+        {{ commonForm[form_function]() }}
+    </div>
+    {{ commonFunctions.getFooter() }}
+    {{ commonFunctions.loadJavaScriptFiles() }}
+</body>
+{{ commonFunctions.getEndFileHTML() }}

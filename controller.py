@@ -38,7 +38,7 @@ class Controller(object):
 
     def trend2(self, subCollectionName, venues, year):
         data = self.model.getSubCollectionSizePerVenues(subCollectionName, venues, year)
-        view = self.jinja_env.get_template('views/column_chart.html')
+        view = self.jinja_env.get_template('views/donutchart.html')
         return view.render(
             title="Number of {} for venues {} in {}".format(
                 subCollectionName, venues, year),
