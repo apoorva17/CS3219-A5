@@ -67,8 +67,12 @@
             <input type="text" class="form-control" placeholder="Lin Li" name="author">
         </div>
         <div class="form-group">
-            <label for="#">Venue</label>
-            <input type="text" class="form-control" placeholder="venue" name="group">
+            <label for="#">Group by</label>
+            <select class="form-control" name="group">
+				<option value="venue">Venues</option>
+				<option value="year">Years</option>
+				<option value="title">Papers</option>
+            </select>
         </div>
         <div class="text-center margin-bottom-20" >
             <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
