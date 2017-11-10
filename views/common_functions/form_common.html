@@ -1,20 +1,24 @@
 {%  macro getFormTrend1() %}
     <form action="/a5/trend1" method = "get">
         <div class="form-group">
-            <label for="#">Number of</label>
-            <input type="text" class="form-control" placeholder="authors" name="subCollectionName">
+            <label for="#">ElementType</label>
+            <select class="form-control" name="subCollectionName">
+				<option value="authors">Authors</option>
+				<option value="inCitations">In Citations</option>
+				<option value="outCitations">Out Citations</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="#">Venue</label>
-            <input type="text" class="form-control" placeholder="arXiv" name="venue">
+            <input type="text" class="form-control" pattern="[0-9a-zA-Z]*" placeholder="arXiv" name="venue">
         </div>
         <div class="col-md-6 margin-bottom-20">
             <label for="#">From Year</label>
-            <input type="number" class="form-control" placeholder="2000" name="yearMin" min = "2000" max = "2016">
+            <input type="number" class="form-control" placeholder="2000" pattern="^[0-9]{4}$" name="yearMin" min = "2000" max = "2016">
         </div>
         <div class="col-md-6 margin-bottom-20">
             <label for="#">To Year</label>
-            <input type="number" class="form-control" placeholder="2015" name="yearMax" min = "2000" max = "2016">
+            <input type="number" class="form-control" placeholder="2015" pattern="^[0-9]{4}$" name="yearMax" min = "2000" max = "2016">
         </div>
         <div class="text-center margin-bottom-20" >
             <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
@@ -26,15 +30,19 @@
     <form action="/a5/trend2" method = "get">
         <div class="form-group">
             <label for="#">Number of</label>
-            <input type="text" class="form-control" placeholder="authors" name="subCollectionName">
+            <select class="form-control" name="subCollectionName">
+				<option value="authors">Authors</option>
+				<option value="inCitations">In Citations</option>
+				<option value="outCitations">Out Citations</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="#">Venues</label>
-            <input type="text" class="form-control" placeholder="venue1,venue2,..." name="venues">
+            <input type="text" class="form-control" placeholder="venue1,venue2,..." pattern="^[a-zA-Z0-9;,\s]*$"name="venues">
         </div>
         <div class="margin-bottom-20">
             <label for="#">In Year</label>
-            <input type="number" class="form-control" placeholder="2000" name="year" min = "2000" max = "2016">
+            <input type="number" class="form-control" placeholder="2000" name="year" pattern="^[0-9]{4}$" min = "2000" max = "2016">
         </div>
         <div class="text-center margin-bottom-20" >
             <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
@@ -46,13 +54,13 @@
     <form action="/a5/trend3" method = "get">
         <div class="margin-bottom-20">
             <label for="#">Top</label>
-            <input type="number" class="form-control margin-bottom-20" placeholder="10" name="n">
-            <input name="elementType" type="text" class="form-control" placeholder="authors">
+            <input type="number" class="form-control margin-bottom-20" pattern="^[0-9]{1,4}$" placeholder="10" name="n">
+            <input name="elementType" type="text" placeholder="authors / inCitations / outCitations" pattern="^authors|inCitations|outCitation$" class="form-control" placeholder="authors">
         </div>
         <div class="form-group">
              <label for="#">For</label>
-             <input name="filterKeys" type="text" class="form-control margin-bottom-20" placeholder="venue">
-             <input type="text" class="form-control" placeholder="ICSE" name="filterValues">
+             <input name="filterKeys" type="text" class="form-control margin-bottom-20" pattern="^venue/authors$" placeholder="venue/authors">
+             <input type="text" class="form-control" placeholder="ICSE" pattern="^[a-zA-Z0-9\s]*$" name="filterValues">
         </div>
         <div class="text-center margin-bottom-20" >
             <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
@@ -64,7 +72,7 @@
     <form action="/a5/trend4" method = "get">
         <div class="form-group">
             <label for="#">Author</label>
-            <input type="text" class="form-control" placeholder="Lin Li" name="author">
+            <input type="text" class="form-control" pattern="^[a-zA-Z0-9\s]*$" placeholder="Lin Li" name="author">
         </div>
         <div class="form-group">
             <label for="#">Group by</label>
@@ -84,7 +92,7 @@
     <form action="/a5/trend5" method = "get">
         <div class="form-group">
             <label for="#">Paper Title</label>
-            <input type="text" class="form-control" placeholder="Low-density parity check codes over GF(q)" name="author">
+            <input type="text" class="form-control" pattern="^[a-zA-Z0-9\s]*$" placeholder="Low-density parity check codes over GF(q)" name="title">
         </div>
         <div class="form-group">
             <label for="#">Max Graph Depth</label>
