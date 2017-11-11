@@ -53,7 +53,7 @@ class Model(object):
             }
         }, {
             "$sort": {"label": 1},
-        }])
+        }], allowDiskUse=True)
 
     def getSubCollectionSizePerVenues(self, subCollectionName, venues, year):
         """Returns the number of distinct number of elements named 'subCollectionName' per
@@ -130,10 +130,13 @@ class Model(object):
         return nodes, edges
 
     def getCitationGraph(self, title, max_depth):
-        colors = {0: '#FF0000', 1: '#00FF00', 2: '#FFFF00'}
+        colors = {0: '#FF0000', 1: '#00FF00', 2: '#FFFF00', 3: '#A2A2A2'}
 
         # Get root paper ID
-        root_paper = self.db.papers.find_one({"title": title})
+        titleRegx = re.compile("^{}$".format(title), re.IGNORECASE)
+        root_paper = self.db.papers.find_one({"title": titleRegx})
+        if root_paper is None:
+            return [], []
         root_id = root_paper['id']
 
         nodes = set([root_id])
@@ -171,7 +174,7 @@ class Model(object):
                     title[14] = '.'
                     title[13] = '.'
                     title[12] = '.'
-                named_nodes.append((j['id'], "".join(title), "".join(title_complete) + "<br />" + "".join(authors), colors[node_level[j['id']]]))
+                named_nodes.append((j['id'], "".join(title), "".join(title_complete) + "<br />" + "".join(authors), colors.get(node_level[j['id']], "#0000FF")))
 
         return named_nodes, edges
 
@@ -205,9 +208,14 @@ class Model(object):
         for key, value in zip(filterKeys, filterValues):
             if key == "author":
                 key = "authors.name"
-            aggregation_pipeline.append({
-                "$match": {key: re.compile("^{}$".format(value), re.IGNORECASE)},
-            })
+            if key in ("year"):
+                aggregation_pipeline.append({
+                    "$match": {key: int(value)},
+                })
+            else:
+                aggregation_pipeline.append({
+                    "$match": {key: re.compile("^{}$".format(value), re.IGNORECASE)},
+                })
 
         # Find top items of elementType.
         aggregation_pipeline.extend([{

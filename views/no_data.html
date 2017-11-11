@@ -1,0 +1,15 @@
+{%  import 'views/common_functions/common_function.html' as commonFunctions %}
+{% import 'views/common_functions/form_common.html' as commonForm %}
+{{ commonFunctions.getHTMLHeader(title, "UTF-8", ['/static/bootstrap/css/bootstrap.css', '/static/design.css'], ["https://www.gstatic.com/charts/loader.js"]) }}
+<body class="body-bg">
+    {{ commonFunctions.getToolBar() }}
+
+    <h3 class="text-center">No Data Found for Query</h3>
+
+    <div class="container">
+        {{ commonForm[form_function]() }}
+    </div>
+    {{ commonFunctions.getFooter() }}
+    {{ commonFunctions.loadJavaScriptFiles() }}
+</body>
+{{ commonFunctions.getEndFileHTML() }}

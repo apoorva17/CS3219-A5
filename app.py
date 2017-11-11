@@ -43,10 +43,8 @@ def trend2():
 def trend3():
     n = request.args.get('n', type=int) or 10
     elementType = request.args.get('elementType', type=str) or "authors"
-    filterKeys = request.args.get('filterKeys', type=str) or "venue"
-    filterKeys = filterKeys.split(",")
-    filterValues = request.args.get('filterValues', type=str) or "ICSE"
-    filterValues = filterValues.split(",")
+    filterKeys = request.args.get('filterKeys', default="", type=str).split(",")
+    filterValues = request.args.get('filterValues', default="", type=str).split(",")
     return controller.trend3(n, elementType, filterKeys, filterValues)
 
 
@@ -59,7 +57,7 @@ def trend4():
 
 @app.route('/a5/trend5')
 def trend5():
-    title = request.args.get('title', type=str) or "Low-density parity check codes over GF(q)"
+    title = request.args.get('title', type=str) or "Low-density parity check codes over GF\(q\)"
     maxDepth = request.args.get('maxDepth', type=int) or 1
     return controller.trend5(title, maxDepth)
 
