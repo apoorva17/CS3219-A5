@@ -26,15 +26,15 @@ def trend1():
     subCollectionName = request.args.get('subCollectionName', type=str) or "authors"
     venue = request.args.get('venue', type=str) or "arXiv"
     yearMin = request.args.get('yearMin', type=int) or 2000
-    yearMax = request.args.get('yearMax', type=int) or 2017
+    yearMax = request.args.get('yearMax', type=int) or 2016
     return controller.trend1(subCollectionName, venue, yearMin, yearMax)
 
 
 @app.route('/a5/trend2')
 def trend2():
     subCollectionName = request.args.get('subCollectionName', type=str) or "authors"
-    venues = request.args.get('venues', type=str).split(",") or "arXiv,Journal of abnormal child psychology"
-    venues = venues
+    venues = request.args.get('venues', type=str) or "arXiv,Journal of abnormal child psychology"
+    venues = venues.split(",")
     year = request.args.get('year', type=int) or 2000
     return controller.trend2(subCollectionName, venues, year)
 
