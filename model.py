@@ -118,13 +118,17 @@ class Model(object):
         n = 1
         nodes.append((0, author, author, "#0000FF"))
         for j in cursor:
-            title = list(j['_id']['Group'])
-            if len(title) > 15:
+            if (group != "year"):
+              title = list(j['_id']['Group'])
+              if len(title) > 15:
                 title = title[:15]
                 title[14] = '.'
                 title[13] = '.'
                 title[12] = '.'
-            nodes.append((n,"".join(title) , j['_id']['Group'], "#FF0000"))
+              titlec = "".join(title)
+            else:
+             titlec = j['_id']['Group']
+            nodes.append((n,titlec, j['_id']['Group'], "#FF0000"))
             edges.append((0, n))
             g = n
             n += 1
