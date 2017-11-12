@@ -116,15 +116,21 @@ class Model(object):
         nodes = []
         edges = []
         n = 1
-        nodes.append((0, author, "", "#0000FF"))
+        nodes.append((0, author, author, "#0000FF"))
         for j in cursor:
-            nodes.append((n, j['_id']['Group'], "", "#FF0000"))
+            title = list(j['_id']['Group'])
+            if len(title) > 15:
+                title = title[:15]
+                title[14] = '.'
+                title[13] = '.'
+                title[12] = '.'
+            nodes.append((n,"".join(title) , j['_id']['Group'], "#FF0000"))
             edges.append((0, n))
             g = n
             n += 1
             for name in j['uniqueItems']:
                 if author not in name:
-                    nodes.append((n, name, "", '#00FF00'))
+                    nodes.append((n, name, name, '#00FF00'))
                     edges.append((g, n))
                     n += 1
         return nodes, edges
