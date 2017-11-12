@@ -33,7 +33,7 @@ def trend1():
 @app.route('/a5/trend2')
 def trend2():
     subCollectionName = request.args.get('subCollectionName', type=str) or "authors"
-    venues = request.args.get('venues', type=str) or "arXiv,Journal of abnormal child psychology"
+    venues = request.args.get('venues', type=str) or "arXiv,ICSE"
     venues = venues.split(",")
     year = request.args.get('year', type=int) or 2000
     return controller.trend2(subCollectionName, venues, year)
@@ -43,15 +43,17 @@ def trend2():
 def trend3():
     n = request.args.get('n', type=int) or 10
     elementType = request.args.get('elementType', type=str) or "authors"
-    filterKeys = request.args.get('filterKeys', default="", type=str).split(",")
-    filterValues = request.args.get('filterValues', default="", type=str).split(",")
+    filterKeys = request.args.get('filterKeys', type=str) or "venue"
+    filterKeys = filterKeys.split(",")
+    filterValues = request.args.get('filterValues', type=str) or "ICSE"
+    filterValues = filterValues.split(",")
     return controller.trend3(n, elementType, filterKeys, filterValues)
 
 
 @app.route('/a5/trend4')
 def trend4():
     author = request.args.get('author', type=str) or "Lin Li"
-    group = request.args.get('group', type=str) or "arXiv"
+    group = request.args.get('group', type=str) or "year"
     return controller.trend4(author, group)
 
 
