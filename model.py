@@ -257,7 +257,7 @@ class Model(object):
                 }
             }])
 
-        return self.db.papers.aggregate(aggregation_pipeline)
+        return self.db.papers.aggregate(aggregation_pipeline, allowDiskUse=True)
 
     # -------------------------------------------------------------------------
     #   Original JSON-based Queries
