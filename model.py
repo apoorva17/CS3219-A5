@@ -143,6 +143,7 @@ class Model(object):
         colors = {0: '#FF0000', 1: '#00FF00', 2: '#FFFF00', 3: '#A2A2A2'}
 
         # Get root paper ID
+        title = title.replace("(", "\(").replace(")", "\)")
         titleRegx = re.compile("^{}$".format(title), re.IGNORECASE)
         root_paper = self.db.papers.find_one({"title": titleRegx})
         if root_paper is None:
