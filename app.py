@@ -43,9 +43,9 @@ def trend2():
 def trend3():
     n = request.args.get('n', type=int) or 10
     elementType = request.args.get('elementType', type=str) or "authors"
-    filterKeys = request.args.get('filterKeys', type=str) or ""
+    filterKeys = request.args.get('filterKeys', type=str) or "venue"
     filterKeys = filterKeys.split(",") if filterKeys else []
-    filterValues = request.args.get('filterValues', type=str) or ""
+    filterValues = request.args.get('filterValues', type=str) or "ICSE"
     filterValues = filterValues.split(",") if filterValues else []
     return controller.trend3(n, elementType, filterKeys, filterValues)
 
