@@ -59,7 +59,7 @@ def trend4():
 
 @app.route('/a5/trend5')
 def trend5():
-    title = request.args.get('title', type=str) or "Low-density parity check codes over GF\(q\)"
+    title = request.args.get('title', type=str) or "Low-density parity check codes over GF(q)"
     maxDepth = request.args.get('maxDepth', type=int) or 1
     return controller.trend5(title, maxDepth)
 
