@@ -262,6 +262,11 @@ class Model(object):
                     "as": "document",
                 },
             }, {
+                "$unwind": {
+                    "path": "$document",
+                    "preserveNullAndEmptyArrays": True,
+                },
+            }, {
                 "$project": {
                     "label": {"$ifNull": ["$document.title", "$label"]},
                     "value": 1,
