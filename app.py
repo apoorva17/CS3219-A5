@@ -63,3 +63,6 @@ def trend5():
     maxDepth = request.args.get('maxDepth', type=int) or 1
     return controller.trend5(title, maxDepth)
 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True)
+
