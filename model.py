@@ -263,7 +263,7 @@ class Model(object):
                 },
             }, {
                 "$project": {
-                    "label": {"$ifNull": ["$document[0].title", "$label"]},
+                    "label": {"$ifNull": ["$document.title", "$label"]},
                     "value": 1,
                 }
             }])
